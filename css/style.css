@@ -687,52 +687,6 @@ img {
     color: var(--accent-light);
 }
 
-.activities-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-}
-
-.activity-card {
-    background: var(--navy-primary);
-    padding: 48px 32px;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    transition: transform var(--transition), box-shadow var(--transition);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.activity-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
-    border-color: var(--accent);
-}
-
-.activity-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 90px;
-    height: 90px;
-    background: linear-gradient(135deg, var(--navy-primary), var(--navy-medium));
-    border-radius: 20px;
-    margin-bottom: 24px;
-    color: var(--accent);
-}
-
-.activity-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 12px;
-}
-
-.activity-desc {
-    color: rgba(255, 255, 255, 0.6);
-    line-height: 1.7;
-}
-
 /* ==================== WORKSHOP & ETKİNLİKLER ==================== */
 .section-workshop {
     background: var(--white);
@@ -813,61 +767,6 @@ img {
 
 .section-committees .section-desc {
     color: rgba(255, 255, 255, 0.6);
-}
-
-.committees-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-}
-
-.committee-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 36px 28px;
-    border-radius: 16px;
-    text-align: left;
-    transition: all var(--transition);
-    backdrop-filter: blur(10px);
-}
-
-.committee-card:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--accent);
-    transform: translateY(-4px);
-}
-
-.committee-number {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--accent);
-    opacity: 0.4;
-    display: block;
-    margin-bottom: 12px;
-}
-
-.committee-name {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 8px;
-}
-
-.committee-topic {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.55);
-    line-height: 1.6;
-}
-
-.committee-speaker {
-    display: block;
-    margin-top: 14px;
-    padding-top: 14px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--accent);
-    line-height: 1.5;
 }
 
 /* ==================== TEAM ==================== */
@@ -1520,14 +1419,6 @@ img {
         gap: 24px;
     }
 
-    .activities-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .committees-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
     .team-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1597,14 +1488,6 @@ img {
     }
 
     .vm-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .activities-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .committees-grid {
         grid-template-columns: 1fr;
     }
 
@@ -2101,8 +1984,6 @@ img {
 
 /* ==================== CARD HOVER — 3D TILT + GLOW ==================== */
 .committee,
-.committee-card,
-.activity-card,
 .team-card,
 .subteam-card,
 .committee--cta,
@@ -2121,8 +2002,6 @@ img {
 }
 
 .committee:hover,
-.committee-card:hover,
-.activity-card:hover,
 .team-card:hover,
 .subteam-card:hover,
 .sponsor-card:hover,
@@ -2144,8 +2023,6 @@ img {
 
 /* Cards get a subtle glow halo when hovered */
 .committee,
-.committee-card,
-.activity-card,
 .team-card,
 .subteam-card,
 .sponsor-card,
@@ -2155,8 +2032,6 @@ img {
     position: relative;
 }
 .committee::after,
-.committee-card::after,
-.activity-card::after,
 .team-card::after,
 .subteam-card::after,
 .sponsor-card::after,
@@ -2175,8 +2050,6 @@ img {
     z-index: -1;
 }
 .committee:hover::after,
-.committee-card:hover::after,
-.activity-card:hover::after,
 .team-card:hover::after,
 .subteam-card:hover::after,
 .sponsor-card:hover::after,
@@ -2882,7 +2755,6 @@ body.committees-visible #committees-stage {
     }
     .vm-grid,
     .stats-grid,
-    .activities-grid,
     .team-grid,
     .subteam-grid,
     .sponsors-grid,
@@ -2902,7 +2774,6 @@ body.committees-visible #committees-stage {
 @media (hover: none) {
     .vm-card:hover,
     .stat-item:hover,
-    .activity-card:hover,
     .team-card:hover,
     .subteam-card:hover,
     .speaker-highlight:hover,

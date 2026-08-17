@@ -19,5 +19,3 @@ scripts/generate-qrs/output/
 
 # Vercel deployment metadata
 .vercel/
-
-.vercel

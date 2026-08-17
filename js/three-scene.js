@@ -870,4 +870,3 @@ function animateMode(group, name, t) {
 }
 
 animate();
-console.log('Three.js background scene aktif —', THREE.REVISION);

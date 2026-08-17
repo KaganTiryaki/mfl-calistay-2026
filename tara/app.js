@@ -317,6 +317,8 @@
                 break;
             }
 
+            // Migration 0003 sonrası unique constraint kaldırıldığı için RPC
+            // bu status'u artık döndürmüyor — handler eski deploy fallback olarak duruyor.
             case 'already_used':
                 flashResult('already_used', '✕', `ZATEN KULLANILDI — ${who}`,
                     `İlk geçiş: ${humanTime(res.first_redeemed_at)}`);

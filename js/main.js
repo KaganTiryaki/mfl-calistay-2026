@@ -1,7 +1,6 @@
 /* ==================== PRELOADER ==================== */
 (function preloader() {
     const fill = document.getElementById('preloaderFill');
-    const pct = document.getElementById('preloaderPct');
     const pre = document.getElementById('preloader');
     if (!pre) return;
 
@@ -12,7 +11,6 @@
     function update() {
         const p = Math.round((loaded / total) * 100);
         if (fill) fill.style.width = p + '%';
-        if (pct) pct.textContent = p + '%';
     }
 
     imgs.forEach(img => {
@@ -28,7 +26,6 @@
     function finish() {
         if (pre.classList.contains('is-hidden')) return;
         if (fill) fill.style.width = '100%';
-        if (pct) pct.textContent = '100%';
         setTimeout(() => {
             pre.classList.add('is-hidden');
             document.body.classList.remove('is-loading');
@@ -45,16 +42,13 @@
 
 /* ==================== NAVBAR SCROLL EFFECT ==================== */
 const navbar = document.getElementById('navbar');
-let lastScroll = 0;
 
 window.addEventListener('scroll', () => {
-    const currentScroll = window.scrollY;
-    if (currentScroll > 50) {
+    if (window.scrollY > 50) {
         navbar.classList.add('scrolled');
     } else {
         navbar.classList.remove('scrolled');
     }
-    lastScroll = currentScroll;
 });
 
 /* ==================== MOBILE MENU ==================== */
@@ -444,7 +438,7 @@ if (committeeModal) {
 }
 
 /* ==================== CARD 3D TILT + TAP BURST ==================== */
-const tiltSelector = '.committee, .committee-card, .activity-card, .team-card, .subteam-card, .sponsor-card, .vm-card, .info-card, .past-card, .eventinfo-program, .eventinfo-map';
+const tiltSelector = '.committee, .team-card, .subteam-card, .sponsor-card, .vm-card, .info-card, .past-card, .eventinfo-program, .eventinfo-map';
 const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
 
 document.querySelectorAll(tiltSelector).forEach(card => {
