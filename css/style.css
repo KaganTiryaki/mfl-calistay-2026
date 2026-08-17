@@ -6,7 +6,6 @@
     --navy-dark: #2C56A5;      /* en koyu — ink */
     --navy-primary: #3A64A7;   /* blue-dark */
     --navy-medium: #4472B6;    /* derin mavi — primary */
-    --navy-light: #5381BE;     /* orta-deep geçiş */
 
     /* Accent — logo mavisi gradientten */
     --accent: #819FCD;         /* orta mavi */
@@ -102,8 +101,6 @@ body.menu-open {
 .section-about,
 .section-faq,
 .section-sponsors,
-.section-committees,
-.section-activities,
 .section-past,
 .section-contact {
     position: relative;
@@ -236,7 +233,7 @@ img {
     font-weight: 600;
     font-size: 0.9rem;
     border-radius: 50px;
-    transition: all var(--transition);
+    transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
 }
 
 .nav-cta:hover {
@@ -266,7 +263,7 @@ img {
     width: 24px;
     height: 2px;
     background: var(--white);
-    transition: all var(--transition);
+    transition: transform var(--transition), opacity var(--transition);
     border-radius: 2px;
 }
 
@@ -448,7 +445,7 @@ img {
     font-size: 1rem;
     font-weight: 600;
     border-radius: 50px;
-    transition: all var(--transition);
+    transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
     cursor: pointer;
     border: none;
 }
@@ -670,69 +667,6 @@ img {
     font-weight: 500;
 }
 
-/* ==================== ACTIVITIES ==================== */
-.section-activities {
-    background: var(--navy-dark);
-}
-
-.section-activities .section-title {
-    color: var(--white);
-}
-
-.section-activities .section-desc {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.section-activities .section-badge {
-    color: var(--accent-light);
-}
-
-.activities-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-}
-
-.activity-card {
-    background: var(--navy-primary);
-    padding: 48px 32px;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    transition: transform var(--transition), box-shadow var(--transition);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.activity-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
-    border-color: var(--accent);
-}
-
-.activity-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 90px;
-    height: 90px;
-    background: linear-gradient(135deg, var(--navy-primary), var(--navy-medium));
-    border-radius: 20px;
-    margin-bottom: 24px;
-    color: var(--accent);
-}
-
-.activity-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 12px;
-}
-
-.activity-desc {
-    color: rgba(255, 255, 255, 0.6);
-    line-height: 1.7;
-}
-
 /* ==================== WORKSHOP & ETKİNLİKLER ==================== */
 .section-workshop {
     background: var(--white);
@@ -775,7 +709,7 @@ img {
     color: var(--accent-light);
     font-size: 0.95rem;
     font-weight: 500;
-    transition: all var(--transition);
+    transition: background var(--transition), border-color var(--transition);
 }
 
 .workshop-highlight-item:hover {
@@ -796,78 +730,6 @@ img {
     .workshop-highlights {
         grid-template-columns: 1fr;
     }
-}
-
-/* ==================== COMMITTEES ==================== */
-.section-committees {
-    background: var(--navy-primary);
-}
-
-.section-committees .section-badge {
-    color: var(--accent-light);
-}
-
-.section-committees .section-title {
-    color: var(--white);
-}
-
-.section-committees .section-desc {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.committees-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-}
-
-.committee-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 36px 28px;
-    border-radius: 16px;
-    text-align: left;
-    transition: all var(--transition);
-    backdrop-filter: blur(10px);
-}
-
-.committee-card:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--accent);
-    transform: translateY(-4px);
-}
-
-.committee-number {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--accent);
-    opacity: 0.4;
-    display: block;
-    margin-bottom: 12px;
-}
-
-.committee-name {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 8px;
-}
-
-.committee-topic {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.55);
-    line-height: 1.6;
-}
-
-.committee-speaker {
-    display: block;
-    margin-top: 14px;
-    padding-top: 14px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--accent);
-    line-height: 1.5;
 }
 
 /* ==================== TEAM ==================== */
@@ -1102,7 +964,7 @@ img {
     justify-content: center;
     border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow: 0 4px 12px rgba(10, 22, 40, 0.06);
-    transition: all var(--transition);
+    transition: border-color var(--transition), box-shadow var(--transition);
 }
 
 .sponsor-item:hover {
@@ -1194,7 +1056,7 @@ img {
     font-weight: 600;
     border-radius: 50px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    transition: all var(--transition);
+    transition: background var(--transition), transform var(--transition);
 }
 
 .eventinfo-map-link:hover {
@@ -1454,7 +1316,7 @@ img {
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.06);
     color: rgba(255, 255, 255, 0.6);
-    transition: all var(--transition);
+    transition: background var(--transition), color var(--transition), transform var(--transition);
 }
 
 .social-links a:hover {
@@ -1518,14 +1380,6 @@ img {
 
     .vm-grid {
         gap: 24px;
-    }
-
-    .activities-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .committees-grid {
-        grid-template-columns: 1fr 1fr;
     }
 
     .team-grid {
@@ -1597,14 +1451,6 @@ img {
     }
 
     .vm-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .activities-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .committees-grid {
         grid-template-columns: 1fr;
     }
 
@@ -1911,38 +1757,6 @@ img {
     color: var(--text-muted);
 }
 
-/* -- Committee CTA card -- */
-.committee--cta {
-    background: var(--navy-dark);
-    color: var(--white);
-    justify-content: space-between;
-    border-color: var(--navy-dark);
-}
-.committee--cta:hover {
-    background: var(--navy-primary);
-    border-color: var(--accent);
-}
-.committee__cta-kicker {
-    font-size: 0.8rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent-light);
-    font-weight: 600;
-}
-.committee__cta-title {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    line-height: 1.3;
-    margin-top: 18px;
-}
-.committee__cta-arrow {
-    margin-top: 32px;
-    align-self: flex-end;
-    color: var(--accent);
-    transition: transform var(--transition);
-}
-.committee--cta:hover .committee__cta-arrow { transform: translateX(6px); }
-
 /* -- Program -- */
 .program__download { margin-top: 16px; }
 .program__download a {
@@ -2074,11 +1888,9 @@ img {
 .section-theme { background: rgba(58, 100, 167, 0.70); }
 .section-vm { background: rgba(228, 236, 246, 0.62); }
 .section-about { background: rgba(237, 242, 248, 0.62); }
-.section-activities { background: rgba(44, 86, 165, 0.72); }
 .section-workshop {
     background: linear-gradient(135deg, rgba(58, 100, 167, 0.72), rgba(68, 114, 182, 0.72));
 }
-.section-committees { background: rgba(58, 100, 167, 0.70); }
 .section-team { background: rgba(44, 86, 165, 0.72); }
 .section-faq { background: rgba(237, 242, 248, 0.62); }
 .section-sponsors { background: rgba(228, 236, 246, 0.62); }
@@ -2101,16 +1913,10 @@ img {
 
 /* ==================== CARD HOVER — 3D TILT + GLOW ==================== */
 .committee,
-.committee-card,
-.activity-card,
 .team-card,
 .subteam-card,
-.committee--cta,
-.sponsor-card,
 .faq-item,
 .vm-card,
-.info-card,
-.past-card,
 .eventinfo-program,
 .eventinfo-map {
     transform-style: preserve-3d;
@@ -2121,14 +1927,9 @@ img {
 }
 
 .committee:hover,
-.committee-card:hover,
-.activity-card:hover,
 .team-card:hover,
 .subteam-card:hover,
-.sponsor-card:hover,
 .vm-card:hover,
-.info-card:hover,
-.past-card:hover,
 .eventinfo-program:hover,
 .eventinfo-map:hover {
     transform: translateY(-10px) scale(1.05) !important;
@@ -2137,32 +1938,17 @@ img {
     z-index: 2;
 }
 
-.committee--cta:hover {
-    transform: translateY(-10px) scale(1.06) !important;
-    box-shadow: 0 25px 60px rgba(129, 159, 205, 0.45) !important;
-}
-
 /* Cards get a subtle glow halo when hovered */
 .committee,
-.committee-card,
-.activity-card,
 .team-card,
 .subteam-card,
-.sponsor-card,
-.vm-card,
-.info-card,
-.past-card {
+.vm-card {
     position: relative;
 }
 .committee::after,
-.committee-card::after,
-.activity-card::after,
 .team-card::after,
 .subteam-card::after,
-.sponsor-card::after,
-.vm-card::after,
-.info-card::after,
-.past-card::after {
+.vm-card::after {
     content: '';
     position: absolute;
     inset: -2px;
@@ -2175,14 +1961,9 @@ img {
     z-index: -1;
 }
 .committee:hover::after,
-.committee-card:hover::after,
-.activity-card:hover::after,
 .team-card:hover::after,
 .subteam-card:hover::after,
-.sponsor-card:hover::after,
-.vm-card:hover::after,
-.info-card:hover::after,
-.past-card:hover::after {
+.vm-card:hover::after {
     opacity: 1;
 }
 
@@ -2192,10 +1973,10 @@ img {
 }
 
 /* ==================== COMMITTEE HOVER HINT ==================== */
-.committee:not(.committee--cta) {
+.committee {
     cursor: pointer;
 }
-.committee:not(.committee--cta)::before {
+.committee::before {
     content: 'Detayları gör →';
     position: absolute;
     bottom: 16px;
@@ -2215,7 +1996,7 @@ img {
     z-index: 3;
     box-shadow: 0 6px 18px rgba(58, 100, 167, 0.3);
 }
-.committee:not(.committee--cta):hover::before {
+.committee:hover::before {
     opacity: 1;
     transform: translateY(0) scale(1);
 }
@@ -2882,7 +2663,6 @@ body.committees-visible #committees-stage {
     }
     .vm-grid,
     .stats-grid,
-    .activities-grid,
     .team-grid,
     .subteam-grid,
     .sponsors-grid,
@@ -2902,7 +2682,6 @@ body.committees-visible #committees-stage {
 @media (hover: none) {
     .vm-card:hover,
     .stat-item:hover,
-    .activity-card:hover,
     .team-card:hover,
     .subteam-card:hover,
     .speaker-highlight:hover,

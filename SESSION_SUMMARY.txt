@@ -1,0 +1,337 @@
+================================================================================
+MFL FBÇ '26 — OTURUM ÖZETİ
+================================================================================
+
+Bu oturumda etkinlik sonrası (9-10 Mayıs 2026 sonrası) MFL FBÇ '26 projesini
+sıfırdan ele alıp:
+  1. Projeyi tamamen analiz ettik
+  2. Yemek QR sistemini ve tüm geçici dosyaları temizledik
+  3. Codebase'i compactladık (ölü CSS/JS sildi)
+  4. Görselleri kategorilere ayırıp yeniden adlandırdık
+  5. Eski proje versiyonlarını sistemden sildik
+  6. Local'de test ettik (canlı eşdeğer)
+  7. İki kapsamlı doküman ürettik (PROJECT_SUMMARY + CLAUDE.md)
+
+
+================================================================================
+BAŞLANGIÇTA NE VARDI
+================================================================================
+
+Proje yapısı (oturum öncesi):
+  - index.html, css/style.css, js/main.js, js/three-scene.js, js/carousel.js
+  - js/scene/ klasörü (Three.js komite sahnesi)
+  - assets/images/ flat olarak 17 görsel + bir bos nöropsikoloji klasörü
+  - adminpanel/ (yemek QR yetkili paneli)
+  - tara/ (yemek QR scanner)
+  - ekle.html (hızlı kart ekleme)
+  - yemekqrkodlari/ (800+ QR PNG)
+  - supabase/ (migrations + edge function)
+  - scripts/generate-qrs/ (Node QR üretici)
+  - docs/ (eski plan/spec'ler)
+  - .local-adminpanel/, .playwright-mcp/, .qr-test/, .tmp-color/ (geçici klasörler)
+  - Root'ta: todelete.json, 3 zip, 3 liste HTML, 3 PDF, mockup PNG'ler
+  - CLAUDE.md (109 satır, yemek QR notlarıyla)
+  - vercel.json (yemek route redirect'leriyle)
+
+Toplam disk ~56 MB, ~833 dosya.
+
+
+================================================================================
+ADIM 1 — PROJE ANALİZİ
+================================================================================
+
+Tüm dosyaları inceleyerek:
+  - 7 komiteli landing yapısı (Kuantum, Nöro, AI-NLP, Aero, Molbio, Forensic, Smart)
+  - İki ayrı Three.js sahnesi (bg-canvas + committees-stage)
+  - Yemek QR sistemi (cards/redemptions/staff_codes + RLS + SECURITY DEFINER RPC)
+  - Edge function uyumsuzluğu (klasör send-kabul-mail / endpoint yemek-mail)
+  - Etkinlik tarihleri hardcoded (2026-05-09, 2026-05-10)
+  - vanilla HTML/CSS/JS, build-step yok
+  - Türkçe içerik, navy mavi palette, Inter + Playfair fontları
+
+4 paralel Explore agent ile audit yapıldı:
+  - Root cleanup audit
+  - CSS dead code audit
+  - JS dead code audit
+  - HTML duplication audit
+
+
+================================================================================
+ADIM 2 — YEMEK QR SİSTEMİNİ SİLME
+================================================================================
+
+Kullanıcı talebi: "etkinlik bitti landing pagede gözüken şeyler dışında her
+şeyi silebiliriz"
+
+SİLİNEN KLASÖRLER (toplu):
+  adminpanel/                  (40K, PIN panel + kart listesi)
+  tara/                        (37K, görevli scanner)
+  yemekqrkodlari/              (6.8M, 800+ QR PNG)
+  supabase/                    (44K, migrations + edge function)
+  scripts/                     (98K, Node QR üretici scripts)
+  docs/                        (eski plan/spec dokümanlar)
+  .local-adminpanel/           (eski admin/tara snapshot)
+  .playwright-mcp/             (Nisan 27 test log'ları)
+  .qr-test/                    (boş)
+  .tmp-color/                  (boş)
+
+SİLİNEN ROOT DOSYALAR:
+  ekle.html                    (hızlı kart ekleme aracı)
+  calistayci-listesi.html/.pdf
+  parayi-atanlar-listesi.html/.pdf
+  fosforlu-highlight-listesi.html
+  muckmuckdemosskalp.pdf       (anonim 2 MB)
+  preloader-v2.png             (1.1 MB, hiç referans yok)
+  preloader-v2-loading.png     (1.1 MB)
+  yemekqrkodlari-yeni.zip      (yemekqrkodlari/png alt kümesi)
+  yeni-2-kart.zip
+  yeni-qrlar-177-188.zip
+  todelete.json                (etkinlik katılımcı veritabanı yedek)
+
+GÜNCELLENEN DOSYALAR:
+  vercel.json    → sadece {"trailingSlash": false} kaldı
+                   (admin/panel/gorevli redirect'leri silindi)
+  .gitignore     → scripts/generate-qrs referansları temizlendi
+  CLAUDE.md      → "Yemek QR Sistemi" bölümü ve dosya yapısı listesi çıkarıldı
+
+Toplam: 833 dosya silindi, 13620 satır eksildi, 17 satır eklendi.
+
+
+================================================================================
+ADIM 3 — LANDING İÇİNDE ÖLÜ KOD TEMİZLİĞİ
+================================================================================
+
+CSS TEMİZLİĞİ (css/style.css ~270 satır eksildi):
+
+  Ölü selector'lar silindi (HTML'de hiç kullanılmıyordu):
+    .activity-card, .activity-icon, .activity-title, .activity-desc
+    .activities-grid
+    .committee-card (eski naming, .committee-slide kullanılıyor)
+    .committees-grid
+    .committee-number, .committee-name, .committee-topic, .committee-speaker
+    .committee--cta blok (HTML'de .committees-cta kullanılıyor)
+    .info-card, .past-card, .sponsor-card (consolidated rule'lardan)
+    .section-activities (hiç section yok)
+    .section-committees (.section--committees BEM kullanılıyor)
+
+  Consolidated rule'lar (1934-2017 satırları) sadeleştirildi:
+    Card hover/tilt liste sadece live class'lara indirgendi
+    Glow halo liste sadece live class'lara indirgendi
+    Background list'lerden dead .section-* çıkarıldı
+    Section position list'lerden dead .section-* çıkarıldı
+
+  Kullanılmayan CSS variable silindi:
+    --navy-light: #5381BE (hiç referans yok)
+
+  transition: all ihlalleri düzeltildi (CLAUDE.md kuralı):
+    7 yerde spesifik property listesi yapıldı:
+      .nav-cta:    background, transform, box-shadow
+      .hamburger:  transform, opacity
+      .btn:        background, transform, box-shadow
+      .workshop-highlight-item: background, border-color
+      .sponsor-item: border-color, box-shadow
+      .eventinfo-map-link: background, transform
+      .social-links a: background, color, transform
+
+  Media query .activities-grid, .committees-grid, .activity-card:hover çıkarıldı.
+
+JS TEMİZLİĞİ (js/main.js):
+  - let lastScroll = 0 ve lastScroll = currentScroll satırları silindi
+    (yazılıyordu ama hiç okunmuyordu)
+  - tilt selector sadeleştirildi:
+    Eski: '.committee, .committee-card, .activity-card, .team-card, .subteam-card,
+           .sponsor-card, .vm-card, .info-card, .past-card, .eventinfo-program,
+           .eventinfo-map'
+    Yeni: '.committee, .team-card, .subteam-card, .vm-card, .eventinfo-program,
+           .eventinfo-map'
+  - .committee:not(.committee--cta) → .committee (modifier zaten kullanılmıyor)
+
+
+================================================================================
+ADIM 4 — ESKİ MFL PROJE VERSİYONLARINI SİLME
+================================================================================
+
+Sistem genelinde bulunan eski versiyonlar silindi:
+
+  Desktop/mfl calistay/abiminbegendigi/        (Astro tabanlı eski deneme)
+  Desktop/mfl calistay/mflcalistaysonprototip/ (eski npm projesi)
+  Desktop/mfl calistay/orjinalsite/            (en eski vanilla site)
+  Desktop/MFL-FBC26-QR-Kartlari/               (QR kart klasörü)
+  Desktop/MFL-FBC26-QR-Kartlari.zip            (yukarıdakinin zip'i)
+
+Diskten geri alınamaz şekilde temizlendi. Aktif olan
+mfl-calistay-2026/ ve MFL ile alakasız diğer projeler (birliktecalismauygulamasi,
+borsasayfasi, dilleme, vb.) korundu.
+
+
+================================================================================
+ADIM 5 — GÖRSELLERİ KATEGORİZE ETME
+================================================================================
+
+Eski yapı (flat, karışık):
+  assets/images/
+    25-1ncu-foto.png, 25-2nci-foto.png, 25-3ncu-foto.png, 25-4nci-foto.png
+    Akademi-baskan.png
+    Genel-koordinator-sir-demir.png
+    Saha-es-baskanlari-mr-alibaraann.png
+    ekerlogo.png
+    lojistik-es-baskanlar.png
+    mfllogo.png
+    nöropsikoloji/nöropsikoloji.png   (hiç referans yok)
+    portylogo.png
+    pr-baskan.jpeg
+    press-baskan-miss-meva.jpeg
+    programblabla.png
+    uludaglogo.png
+    yardimci-koordinator.png
+    çalıştay.png
+
+Yeni yapı (kategorize, lowercase-kebab, ASCII-safe):
+  assets/images/
+    brand/
+      mfl.png        (eski: mfllogo.png)
+      fbc.png        (eski: çalıştay.png)
+    sponsors/
+      eker.png       (eski: ekerlogo.png)
+      porty.png      (eski: portylogo.png)
+      uludag.png     (eski: uludaglogo.png)
+    team/
+      akademi-baskan.png         (eski: Akademi-baskan.png)
+      genel-koordinator.png      (eski: Genel-koordinator-sir-demir.png)
+      yardimci-koordinator.png   (aynı)
+      pr-baskan.jpeg             (aynı)
+      press-baskan.jpeg          (eski: press-baskan-miss-meva.jpeg)
+      lojistik-baskanlari.png    (eski: lojistik-es-baskanlar.png)
+      saha-baskanlari.png        (eski: Saha-es-baskanlari-mr-alibaraann.png)
+    past-2025/
+      1.png  (eski: 25-1ncu-foto.png)
+      2.png  (eski: 25-2nci-foto.png)
+      3.png  (eski: 25-3ncu-foto.png)
+      4.png  (eski: 25-4nci-foto.png)
+    program/
+      genel.png      (eski: programblabla.png)
+
+Yapılan ek temizlik:
+  - nöropsikoloji/nöropsikoloji.png (1.5 MB, hiç referans yok) silindi
+  - Kişi nickname'leri ("sir-demir", "miss-meva", "mr-alibaraann") çıkarıldı
+  - Türkçe karakterli isimler ASCII-safe yapıldı
+  - kapital harfli isimler lowercase'e indirildi
+
+index.html'de 22 path referansı güncellendi (replace_all ile).
+
+Kırık bağlantı düzeltildi:
+  index.html:532 link target program-genel.png idi (FİZİKSEL DOSYA YOKTU)
+  → assets/images/program/genel.png olarak düzeltildi (artık çalışıyor)
+
+
+================================================================================
+ADIM 6 — LOCAL TEST
+================================================================================
+
+Node ile mini HTTP server kuruldu (port 8765):
+  Tüm path'ler 200 OK doğrulandı:
+    css/style.css                            200
+    js/main.js, three-scene.js, carousel.js  200
+    js/scene/*.js (4 dosya)                  200
+    js/scene/signatures/*.js (7 dosya)       200
+    assets/images/brand/*.png (2)            200
+    assets/images/sponsors/*.png (3)         200
+    assets/images/team/*.png/.jpeg (7)       200
+    assets/images/past-2025/*.png (4)        200
+    assets/images/program/*.png (1)          200
+
+  Sadece beklenen 404'ler:
+    /_vercel/insights/script.js      (Vercel inject, prod-only)
+    /_vercel/speed-insights/script.js (Vercel inject, prod-only)
+
+Canlı eşdeğer: sıfır gerçek hata.
+
+
+================================================================================
+ADIM 7 — DOKÜMANTASYON
+================================================================================
+
+İki kapsamlı doküman üretildi:
+
+PROJECT_SUMMARY.md (3143 satır):
+  - 14 bölümlü detaylı proje referansı
+  - index.html'in 21 alt section'unun teker teker anatomisi
+  - css/style.css'in 18 ana sistem açıklaması
+  - js/main.js'in 14 IIFE'sinin işlevi
+  - Three.js mimarisi:
+      bg-canvas (three-scene.js, 7 mode crossfade)
+      committees-stage (stage.js + 7 signature + split-mirror)
+  - Live class envanteri (24 alt kategori, padding-free)
+  - 7 etkileşim akışı adım adım
+  - Tarayıcı desteği, erişilebilirlik
+  - Deploy ve hosting
+  - Tasarım kararları ve quirks
+  - SSS
+
+CLAUDE.md (1459 satır, yeniden yazıldı):
+  - Pre-task workflow (görev tipine göre ilk aksiyon tablosu)
+  - Skill eşleştirme tablosu
+  - Brainstorming "zorunlu/değil" iki listesi
+  - Dil ve içerik kuralları
+  - Brand identity (renk, font, logo)
+  - 9 anti-generic stil kuralı (transition:all yasak, layered shadow, vb.)
+  - Three.js performance YAP/YAPMA listeleri
+  - Animasyon disiplini (GSAP, Lenis, CSS)
+  - CSS + JS mimari kuralları
+  - Erişilebilirlik kontrol listesi
+  - Test/doğrulama protokolü (local server one-liner dahil)
+  - 15 yaygın tuzak (pitfall)
+  - Git/commit disiplini
+  - Dokunulmaz liste
+  - Hata halinde yol haritası
+  - 12 dosya-bazlı edit kuralı
+  - Performans kuralları
+  - Edit öncesi/sonrası 9-maddelik kontrol listesi
+
+
+================================================================================
+SON DURUM
+================================================================================
+
+Kök dizin yapısı (38 dosya):
+  mfl-calistay-2026/
+  ├── index.html              (1040 satır, 64 KB, tüm landing)
+  ├── CLAUDE.md               (1459 satır, görev kuralları)
+  ├── PROJECT_SUMMARY.md      (3143 satır, proje referansı)
+  ├── SESSION_SUMMARY.txt     (bu dosya)
+  ├── vercel.json             (3 satır)
+  ├── robots.txt
+  ├── .gitignore              (8 satır)
+  ├── css/style.css           (~2700 satır, ölü kod temizlenmiş)
+  ├── js/
+  │   ├── main.js             (~560 satır, sadeleştirilmiş)
+  │   ├── three-scene.js      (870 satır, arka plan beyin)
+  │   ├── carousel.js         (200 satır, komite picker)
+  │   └── scene/              (Three.js sahne sistemi)
+  │       ├── anchors.js, camera.js, dispose.js, stage.js
+  │       └── signatures/     (7 imza + index)
+  └── assets/
+      └── images/             (17 görsel, 5 kategoriye ayrılmış)
+          ├── brand/, sponsors/, team/, past-2025/, program/
+
+Disk: orijinal ~56 MB → şimdi src kısmı ~140 KB + görseller ~12 MB
+      (Yemek sistemi 6.8 MB + scripts 98 KB + supabase 44 KB + diğer ~7 MB silindi)
+
+Git state:
+  833 dosya silindi (D), 4 dosya değiştirildi (M), 3 dosya yeni (??):
+  - SESSION_SUMMARY.txt (yeni)
+  - PROJECT_SUMMARY.md (yeni)
+  - CLAUDE.md (değişti — yeniden yazıldı)
+  - css/style.css, js/main.js, vercel.json, .gitignore, index.html (değişti)
+  - assets/images/* (taşındı, eski path'ler silindi, yeni path'ler oluştu)
+  - adminpanel/, tara/, yemekqrkodlari/, supabase/, scripts/, docs/,
+    ekle.html, *liste*.html/.pdf, todelete.json (silindi)
+
+Kullanıcı henüz commit atmadı — git history'de hâlâ silinen klasörler var,
+kullanıcı `git add -A && git commit` ile geçiş yapmak istediğinde temiz
+bir commit atabilir.
+
+
+================================================================================
+TAMAMLANDI
+================================================================================

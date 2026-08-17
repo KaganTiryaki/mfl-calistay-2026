@@ -45,16 +45,13 @@
 
 /* ==================== NAVBAR SCROLL EFFECT ==================== */
 const navbar = document.getElementById('navbar');
-let lastScroll = 0;
 
 window.addEventListener('scroll', () => {
-    const currentScroll = window.scrollY;
-    if (currentScroll > 50) {
+    if (window.scrollY > 50) {
         navbar.classList.add('scrolled');
     } else {
         navbar.classList.remove('scrolled');
     }
-    lastScroll = currentScroll;
 });
 
 /* ==================== MOBILE MENU ==================== */
@@ -428,7 +425,7 @@ if (committeeModal) {
     }, { passive: true });
 
     // Legacy card binding kept for any non-carousel .committee cards still in DOM
-    document.querySelectorAll('.committee:not(.committee--cta)').forEach(card => {
+    document.querySelectorAll('.committee').forEach(card => {
         const num = card.querySelector('.committee__num')?.textContent?.trim();
         if (!num) return;
         card.addEventListener('click', () => openCommittee(num, card));
@@ -444,7 +441,7 @@ if (committeeModal) {
 }
 
 /* ==================== CARD 3D TILT + TAP BURST ==================== */
-const tiltSelector = '.committee, .committee-card, .activity-card, .team-card, .subteam-card, .sponsor-card, .vm-card, .info-card, .past-card, .eventinfo-program, .eventinfo-map';
+const tiltSelector = '.committee, .team-card, .subteam-card, .vm-card, .eventinfo-program, .eventinfo-map';
 const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
 
 document.querySelectorAll(tiltSelector).forEach(card => {
