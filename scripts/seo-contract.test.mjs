@@ -17,6 +17,12 @@ test('public facts remain visible without JavaScript', () => {
   }
 });
 
+test('brand logos beside visible brand text stay decorative for screen readers', () => {
+  assert.match(html, /<img src="assets\/images\/brand\/mfl\.png" alt="" class="nav-logo-img"/);
+  assert.match(html, /<img src="assets\/images\/brand\/fbc\.png" alt="" class="hero-logo zoomable"/);
+  assert.match(html, /<img src="assets\/images\/brand\/mfl\.png" alt="" class="footer-logo-img"/);
+});
+
 test('FAQ answers the committee question with all seven committee names', () => {
   assert.match(html, /MFL FBÇ komiteleri nelerdir\?/);
   for (const committee of [
@@ -32,7 +38,7 @@ test('FAQ answers the committee question with all seven committee names', () => 
   }
 });
 
-test('structured data contains a truthful Event and visible FAQ page', () => {
+test('structured data exposes the canonical Event URLs and committee FAQ entry', () => {
   const blocks = jsonLdBlocks(html);
   const event = blocks.find((block) => block['@type'] === 'Event');
   const faq = blocks.find((block) => block['@type'] === 'FAQPage');

@@ -216,7 +216,7 @@ Bu boyutlar disk ölçümüdür; ağda sıkıştırılmış transfer boyutu ile 
 
 **Dosyalar:** Koşullu `index.html` JSON-LD / `vercel.json`; dış ayarlar yalnız uygulama yetkisi ayrıca mevcutsa.
 
-- [x] Mevcut Event JSON-LD'yi Rich Results Test ile doğrula; report SEO 100 değerini rich-result geçerliliği sayma. Görünür program ve iki haritadan gerçek etkinlik venue'sunu belirle; doğrulanmadan okul adresini etkinlik konumu olarak yazma.
+- [ ] Mevcut Event JSON-LD'yi Rich Results Test ile doğrula; report SEO 100 değerini rich-result geçerliliği sayma. Görünür program ve iki haritadan gerçek etkinlik venue'sunu belirle; doğrulanmadan okul adresini etkinlik konumu olarak yazma.
 - [x] Gerekliyse Event'e gerçek location/PostalAddress, image, url ve organizer url ekle; arşiv için tarihleri geleceğe taşıma, açık offer/başvuru üretme. Tarih geçmiş olması cancellation değildir. LocalBusiness yerine Event/Organization semantiğini koru. Şemaya dokunmama yerel kuralı nedeniyle bu ayrı görev uygulama kapsamı netleştirilerek yürütülür.
 - [ ] SPF önerisinde önce domain'in gerçekten mail gönderip göndermediğini, kullanılan provider ve Return-Path domain'ini belirle. Sitede iletişim Gmail adresidir; root domain'e rastgele Gmail/Brevo SPF ekleme. Gerçek gönderici domain'i için provider'ın doğrulanmış kaydını ve mevcut TXT'leri kontrol et; tek SPF kaydı ve DKIM/DMARC hizalaması ayrı kabul ölçütüdür.
 - [ ] DMARC `p=none` gözlem politikası raporda görülüyor; kayıtların canlı durumu ayrıca doğrulanır. DNS değişikliği ve gerçek teslim testi bu plan yazımına dahil değildir.
