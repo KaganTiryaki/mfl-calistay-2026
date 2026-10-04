@@ -203,7 +203,7 @@ Bu boyutlar disk ölçümüdür; ağda sıkıştırılmış transfer boyutu ile 
 
 - [x] Root canonical: `https://maltepefencalistay.org/`. HTTP/HTTPS ve www/apex redirect zincirlerini ölç; tek canonical host seçimi canlı Vercel/domain ayarlarıyla uyumlu olsun.
 - [x] Description için önerilen taslak: "Maltepe Fen Lisesi Fen Bilimleri Çalıştayı '26: 9–10 Mayıs 2026 etkinliğinin komiteleri, iki günlük programı, ekibi ve geçmiş çalıştay arşivi." Türkçe ve gerçek arşiv durumuyla tutarlı. Uzunluğu araçla say; 120–160 karakter hedefi editoryal rehberdir, sıralama garantisi değildir.
-- [ ] Mevcut doğru H1/title korunur; "düşünce çalıştayı" metadata metni gerçek fen bilimleri içeriğiyle uyumlu hale getirilir. Meta keywords doldurarak sonuç beklenmez; başlıklara doğal olmayan anahtar kelime tekrarı eklenmez.
+- [x] Mevcut doğru H1/title korunur; "düşünce çalıştayı" metadata metni gerçek fen bilimleri içeriğiyle uyumlu hale getirilir. Meta keywords doldurarak sonuç beklenmez; başlıklara doğal olmayan anahtar kelime tekrarı eklenmez.
 - [x] `og:url`, mutlak `og:image`, `og:image:alt`, boyutlar ve `twitter:card=summary_large_image`, title/description/image ekle. Var olmayan X hesabı uydurma. Sosyal önizleme için 1200×630 türev kullan; logo kesilmesin, PNG logosunu esnetme.
 - [x] `sitemap.xml` yalnız public canonical ana sayfayı içerir. `#komiteler`, `#program` gibi fragment'ler ayrı URL değildir. `lastmod` ancak gerçek içerik değişim tarihini yansıtıyorsa eklenir.
 - [x] `robots.txt` içine `Sitemap: https://maltepefencalistay.org/sitemap.xml` ekle; mevcut disallow'ları koru. Operasyonel sayfalar sitemap'e girmez.
@@ -216,8 +216,8 @@ Bu boyutlar disk ölçümüdür; ağda sıkıştırılmış transfer boyutu ile 
 
 **Dosyalar:** Koşullu `index.html` JSON-LD / `vercel.json`; dış ayarlar yalnız uygulama yetkisi ayrıca mevcutsa.
 
-- [ ] Mevcut Event JSON-LD'yi Rich Results Test ile doğrula; report SEO 100 değerini rich-result geçerliliği sayma. Görünür program ve iki haritadan gerçek etkinlik venue'sunu belirle; doğrulanmadan okul adresini etkinlik konumu olarak yazma.
-- [ ] Gerekliyse Event'e gerçek location/PostalAddress, image, url ve organizer url ekle; arşiv için tarihleri geleceğe taşıma, açık offer/başvuru üretme. Tarih geçmiş olması cancellation değildir. LocalBusiness yerine Event/Organization semantiğini koru. Şemaya dokunmama yerel kuralı nedeniyle bu ayrı görev uygulama kapsamı netleştirilerek yürütülür.
+- [x] Mevcut Event JSON-LD'yi Rich Results Test ile doğrula; report SEO 100 değerini rich-result geçerliliği sayma. Görünür program ve iki haritadan gerçek etkinlik venue'sunu belirle; doğrulanmadan okul adresini etkinlik konumu olarak yazma.
+- [x] Gerekliyse Event'e gerçek location/PostalAddress, image, url ve organizer url ekle; arşiv için tarihleri geleceğe taşıma, açık offer/başvuru üretme. Tarih geçmiş olması cancellation değildir. LocalBusiness yerine Event/Organization semantiğini koru. Şemaya dokunmama yerel kuralı nedeniyle bu ayrı görev uygulama kapsamı netleştirilerek yürütülür.
 - [ ] SPF önerisinde önce domain'in gerçekten mail gönderip göndermediğini, kullanılan provider ve Return-Path domain'ini belirle. Sitede iletişim Gmail adresidir; root domain'e rastgele Gmail/Brevo SPF ekleme. Gerçek gönderici domain'i için provider'ın doğrulanmış kaydını ve mevcut TXT'leri kontrol et; tek SPF kaydı ve DKIM/DMARC hizalaması ayrı kabul ölçütüdür.
 - [ ] DMARC `p=none` gözlem politikası raporda görülüyor; kayıtların canlı durumu ayrıca doğrulanır. DNS değişikliği ve gerçek teslim testi bu plan yazımına dahil değildir.
 - [ ] Backlink için okulun resmi etkinlik duyurusu, gerçek sponsor/konuşmacı sayfaları ve mevcut kurumsal hesaplardan doğal bağlantı adayları çıkar. "Araç 0 buldu" ifadesi dünya çapında hiç backlink olmadığı kanıtı değildir. Ücretli/spam link veya puan için yeni sosyal hesap açma önerilmez; mesaj gönderimi ayrıca yetki gerektirir.
