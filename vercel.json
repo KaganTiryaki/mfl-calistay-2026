@@ -5,6 +5,12 @@
   ],
   "redirects": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.maltepefencalistay.org" }],
+      "destination": "https://maltepefencalistay.org/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "www.maltepefencalistay.org" }],
       "destination": "https://maltepefencalistay.org/:path*",
