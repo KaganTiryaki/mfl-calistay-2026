@@ -17,14 +17,6 @@
 /* ==================== NAVBAR SCROLL EFFECT ==================== */
 const navbar = document.getElementById('navbar');
 
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
-});
-
 /* ==================== MOBILE MENU ==================== */
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
@@ -111,7 +103,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.nav-link');
 
-window.addEventListener('scroll', () => {
+let scrollChromeFrame = 0;
+function updateScrollChrome() {
+    scrollChromeFrame = 0;
+    if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
     let current = '';
     sections.forEach(section => {
         const sectionTop = section.offsetTop - 100;
@@ -126,7 +121,15 @@ window.addEventListener('scroll', () => {
             link.classList.add('active');
         }
     });
-});
+}
+
+function scheduleScrollChrome() {
+    if (!scrollChromeFrame) scrollChromeFrame = requestAnimationFrame(updateScrollChrome);
+}
+
+window.addEventListener('scroll', scheduleScrollChrome, { passive: true });
+window.addEventListener('resize', scheduleScrollChrome);
+scheduleScrollChrome();
 
 /* ==================== COUNTDOWN TIMER ==================== */
 const targetDate = new Date('2026-05-09T09:00:00').getTime();

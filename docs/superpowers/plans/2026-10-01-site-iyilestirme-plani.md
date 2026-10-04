@@ -158,13 +158,13 @@ Bu boyutlar disk ölçümüdür; ağda sıkıştırılmış transfer boyutu ile 
 - [x] Network'te mobil açılışta Three/addons/signatures indirildiğini baseline ile kanıtla. Sahne CPU maliyetini dekorasyonları tek tek devre dışı bırakarak karşılaştır; test sırasında yapılan kapatmalar final tasarım kararı değildir.
 - [x] `carousel.js` içindeki statik stage import'u kaldırıp mobil/reduced-motion kontrolünden sonra dynamic import kullan. Mobil kart/modal etkileşimi stage'den bağımsız kalmalı.
 - [x] `visual-bootstrap.js` dekoratif background girişini kritik içerik çıktıktan sonra yüklesin; komite renderer'ını IntersectionObserver ile bölüm yaklaşınca başlatsın. `requestIdleCallback` varsa timeout ile kullan; yoksa içerik sonrası kısa task fallback sağla. Import başarısızlığı yakalanır.
-- [ ] Hash ile `#komiteler` açılışında immediate ihtiyaç kontrolü yap. Sahne hazır değilken modal metni hemen açılsın; sonradan sahne hazır olunca güncel active/modal state uygulanır.
-- [ ] Stage'in yedi signature + mirror oluşturmasını trace'e göre parçalara ayır veya ihtiyaçla oluştur. Kesin koşul: tek uzun synchronous tüm-imza oluşturma görevi kaldırılacak; overview'ın yedi imzayı göstermesi korunacak. Geometry paylaşımı/material clone azaltımı yalnız mevcut split/opacity davranışı korunabiliyorsa yapılır.
+- [x] Hash ile `#komiteler` açılışında immediate ihtiyaç kontrolü yap. Sahne hazır değilken modal metni hemen açılsın; sonradan sahne hazır olunca güncel active/modal state uygulanır.
+- [x] Stage'in yedi signature + mirror oluşturmasını trace'e göre parçalara ayır veya ihtiyaçla oluştur. Kesin koşul: tek uzun synchronous tüm-imza oluşturma görevi kaldırılacak; overview'ın yedi imzayı göstermesi korunacak. Geometry paylaşımı/material clone azaltımı yalnız mevcut split/opacity davranışı korunabiliyorsa yapılır.
 - [x] Görünmeyen signature update'lerini durdur; background committees-visible sırasında render yapmasın. Gizli sekmede RAF iptal olsun; görünürlük geri geldiğinde tek loop ve sıfırlanmış dt ile başlasın.
 - [x] `prefersReducedMotion=false` sabitini gerçek media query ile değiştir. Reduced-motion'da statik/az hareketli görünüm ve native scroll; tercih değişimini runtime'da dinle. 3B içerik dekoratif olduğu için metinsel açıklama her durumda kalır.
 - [x] Mobil breakpoint'i CSS/carousel/background arasında aynı 768 px politikasıyla uyumlu hale getir. 767/768/769 px ve yön değiştirme testinde tekrar init/boş sahne kalmamalı.
-- [ ] GSAP/Lenis başlatma sırasını kontrol et: main classic script defer CDN'den önce çalışabilir. Bağımlılığın hazır olmasını açık olarak yönet; iki smooth-scroll sistemi oluşturma. Kullanılmayan plugin'i ancak tüm referansları arandıktan sonra çıkar.
-- [ ] WebGL unsupported/context lost, bloke CDN, sekme görünürlüğü, breakpoint, hızlı scroll, art arda modal aç/kapat ve reduced-motion testlerini yap. `destroy` sonrası RAF/event/material/geometry kaynaklarının temizlendiğini doğrula.
+- [x] GSAP/Lenis başlatma sırasını kontrol et: main classic script defer CDN'den önce çalışabilir. Bağımlılığın hazır olmasını açık olarak yönet; iki smooth-scroll sistemi oluşturma. Kullanılmayan plugin'i ancak tüm referansları arandıktan sonra çıkar.
+- [x] WebGL unsupported/context lost, bloke CDN, sekme görünürlüğü, breakpoint, hızlı scroll, art arda modal aç/kapat ve reduced-motion testlerini yap. `destroy` sonrası RAF/event/material/geometry kaynaklarının temizlendiğini doğrula.
 
 **Kabul:** Mobil hafif yol komite Three/addons bağımlılıklarını indirmez. Gizli/görünmez sahne CPU üretmez; aynı canvas'a çift renderer kurulmaz. Masaüstü TBT üç ölçüm medianında ≤200 ms hedeflenir; ilk ara kapı başlangıca göre ≥%80 azalma. Etkileşim anında ≥30 FPS, hedef 60 FPS; geçişte donma yok.
 
@@ -190,7 +190,7 @@ Bu boyutlar disk ölçümüdür; ağda sıkıştırılmış transfer boyutu ile 
 - [x] `index.html:878` iframe için görünür etkinlik yeri doğrulanarak açıklayıcı Türkçe title; `:949` için `title="Maltepe Fen Lisesi konum haritası"` ekle. iframe'leri rapor puanı için kaldırma; text adres ve ayrı harita bağlantısı sun.
 - [x] H2 altındaki doğrudan öğretmen başlıklarını H3 yap; ekiplerimiz H3 altında ekip H4 kalabilir. İletişim ve footer'da sıralama atlamalarını düzelt veya başlık olmayan etiketleri styled paragraf yap. Görsel stil class ile korunur.
 - [x] Mobil slide'da role=button nedeniyle heading semantics veya iç içe link/button kaybını incele. Tek açık native button ile modal tetikleme seçeneğini uygula; kart başlığı ve içerik normal semantiğini korusun.
-- [ ] Lightbox/menu/modal: Tab/Shift+Tab döngüsü, Escape, açan elemana focus geri dönüşü, arka içeriğin inert olması ve scroll kilidinin temizlenmesi. Zoomable görseller native button içinde veya eşdeğer klavye erişimli tetikleyici olmalı.
+- [x] Lightbox/menu/modal: Tab/Shift+Tab döngüsü, Escape, açan elemana focus geri dönüşü, arka içeriğin inert olması ve scroll kilidinin temizlenmesi. Zoomable görseller native button içinde veya eşdeğer klavye erişimli tetikleyici olmalı.
 - [x] Program tabları Left/Right, Home/End ve selected/tabindex eşleşmesini desteklesin; gizli panel içeriği Tab sırasına girmez. FAQ button/aria-expanded/content ilişkisini kontrol et.
 - [x] `main` landmark ve görünür-on-focus atlama bağlantısı ekle; fixed navbar anchor/focus hedefini örtmesin. %200 zoom ve 320 px genişlikte iki boyutlu scroll oluşmasın.
 - [x] Lighthouse/axe sonuçları ve ekran okuyucu smoke kontrolüyle erişilebilirlik ağacını yeniden incele; deneysel ajan kategorisini düzeltmenin ölçütü olarak kullan, WebMCP eklemeyi zorunlu sayma.
@@ -208,7 +208,7 @@ Bu boyutlar disk ölçümüdür; ağda sıkıştırılmış transfer boyutu ile 
 - [x] `sitemap.xml` yalnız public canonical ana sayfayı içerir. `#komiteler`, `#program` gibi fragment'ler ayrı URL değildir. `lastmod` ancak gerçek içerik değişim tarihini yansıtıyorsa eklenir.
 - [x] `robots.txt` içine `Sitemap: https://maltepefencalistay.org/sitemap.xml` ekle; mevcut disallow'ları koru. Operasyonel sayfalar sitemap'e girmez.
 - [x] `adminpanel`, `ekle` ve alias'lar için indexlenme ihtiyacını ayrı denetle. `noindex` gerekiyorsa HTML/header üzerinden ver; robots ile bloke URL'nin noindex'inin okunamayabileceğini hesaba kat. Hassas veri korumasını robots'a bırakma.
-- [ ] Sitemap 200 + XML content type, canonical tekilliği, paylaşımdaki mutlak resmin 200 ve doğru boyutlarla sunulmasını doğrula. Gerçek Google Search Console erişimi varsa sitemap submission ve URL inspection ayrı dış işlem olarak yapılır.
+- [x] Sitemap 200 + XML content type, canonical tekilliği, paylaşımdaki mutlak resmin 200 ve doğru boyutlarla sunulmasını doğrula. Gerçek Google Search Console erişimi varsa sitemap submission ve URL inspection ayrı dış işlem olarak yapılır.
 
 **Kabul:** Canonical/OG/X/meta tutarlı, public sitemap geçerli, operasyonel URL eklenmemiş, başvuru yeniden açılmış gibi görünmüyor. Hreflang tek Türkçe site için eklenmez; section hash bağlantıları "0 dahili bağlantı" raporu yüzünden silinmez.
 
@@ -216,14 +216,14 @@ Bu boyutlar disk ölçümüdür; ağda sıkıştırılmış transfer boyutu ile 
 
 **Dosyalar:** Koşullu `index.html` JSON-LD / `vercel.json`; dış ayarlar yalnız uygulama yetkisi ayrıca mevcutsa.
 
-- [ ] Mevcut Event JSON-LD'yi Rich Results Test ile doğrula; report SEO 100 değerini rich-result geçerliliği sayma. Görünür program ve iki haritadan gerçek etkinlik venue'sunu belirle; doğrulanmadan okul adresini etkinlik konumu olarak yazma.
+- [x] Mevcut Event JSON-LD'yi Rich Results Test ile doğrula; report SEO 100 değerini rich-result geçerliliği sayma. Görünür program ve iki haritadan gerçek etkinlik venue'sunu belirle; doğrulanmadan okul adresini etkinlik konumu olarak yazma.
 - [x] Gerekliyse Event'e gerçek location/PostalAddress, image, url ve organizer url ekle; arşiv için tarihleri geleceğe taşıma, açık offer/başvuru üretme. Tarih geçmiş olması cancellation değildir. LocalBusiness yerine Event/Organization semantiğini koru. Şemaya dokunmama yerel kuralı nedeniyle bu ayrı görev uygulama kapsamı netleştirilerek yürütülür.
-- [ ] SPF önerisinde önce domain'in gerçekten mail gönderip göndermediğini, kullanılan provider ve Return-Path domain'ini belirle. Sitede iletişim Gmail adresidir; root domain'e rastgele Gmail/Brevo SPF ekleme. Gerçek gönderici domain'i için provider'ın doğrulanmış kaydını ve mevcut TXT'leri kontrol et; tek SPF kaydı ve DKIM/DMARC hizalaması ayrı kabul ölçütüdür.
-- [ ] DMARC `p=none` gözlem politikası raporda görülüyor; kayıtların canlı durumu ayrıca doğrulanır. DNS değişikliği ve gerçek teslim testi bu plan yazımına dahil değildir.
+- [x] SPF önerisinde önce domain'in gerçekten mail gönderip göndermediğini, kullanılan provider ve Return-Path domain'ini belirle. Sitede iletişim Gmail adresidir; root domain'e rastgele Gmail/Brevo SPF ekleme. Gerçek gönderici domain'i için provider'ın doğrulanmış kaydını ve mevcut TXT'leri kontrol et; tek SPF kaydı ve DKIM/DMARC hizalaması ayrı kabul ölçütüdür.
+- [x] DMARC `p=none` gözlem politikası raporda görülüyor; kayıtların canlı durumu ayrıca doğrulanır. DNS değişikliği ve gerçek teslim testi bu plan yazımına dahil değildir.
 - [ ] Backlink için okulun resmi etkinlik duyurusu, gerçek sponsor/konuşmacı sayfaları ve mevcut kurumsal hesaplardan doğal bağlantı adayları çıkar. "Araç 0 buldu" ifadesi dünya çapında hiç backlink olmadığı kanıtı değildir. Ücretli/spam link veya puan için yeni sosyal hesap açma önerilmez; mesaj gönderimi ayrıca yetki gerektirir.
-- [ ] Analytics zaten var. Facebook Pixel ve ek izleme yalnız gerçek kampanya/ölçüm ihtiyacı ve uygun veri politikası varsa değerlendirilir; performans planında otomatik eklenmez.
-- [ ] `llms.txt` isteğe bağlı kısa public arşiv özeti olabilir; sıralama/ajan puanı garantisi yoktur. Personel paneli/QR/veri bağlantıları eklenmez. Önceliği P3.
-- [ ] Güvenlik header ihtiyacı için önce canlı header envanteri çıkar. CSP report-only ile Google Fonts, unpkg, Maps frame-src ve Vercel analytics kaynakları doğrulanır; `strict` policy veya COOP doğrudan uygulanmaz. Operasyonel uygulamaların CDN/Supabase akışını bozacak global header değişikliği yapılmaz. HSTS includeSubDomains/preload ancak tüm subdomain envanteri doğrulanırsa değerlendirilir.
+- [x] Analytics zaten var. Facebook Pixel ve ek izleme yalnız gerçek kampanya/ölçüm ihtiyacı ve uygun veri politikası varsa değerlendirilir; performans planında otomatik eklenmez.
+- [x] `llms.txt` isteğe bağlı kısa public arşiv özeti olabilir; sıralama/ajan puanı garantisi yoktur. Personel paneli/QR/veri bağlantıları eklenmez. Önceliği P3.
+- [x] Güvenlik header ihtiyacı için önce canlı header envanteri çıkar. CSP report-only ile Google Fonts, unpkg, Maps frame-src ve Vercel analytics kaynakları doğrulanır; `strict` policy veya COOP doğrudan uygulanmaz. Operasyonel uygulamaların CDN/Supabase akışını bozacak global header değişikliği yapılmaz. HSTS includeSubDomains/preload ancak tüm subdomain envanteri doğrulanırsa değerlendirilir.
 
 **Kabul:** Yanlış Event venue/işletme şeması yok. DNS provider'a göre doğrulanmış, sosyal işler gerçek ihtiyaçla sınırlı. Bu aşamanın koşullu işleri yapılmadığında performans/erişilebilirlik düzeltmelerinin tamamlanması engellenmez.
 

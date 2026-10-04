@@ -24,8 +24,10 @@ ready(async () => {
 
     // Mobile path: skip Three.js stage + GTA camera entirely. Render slides as
     // a vertical card list and let tap → modal (handled in main.js).
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const isMobile = mobileQuery.matches;
+    const reducedMotion = motionQuery.matches;
     if (isMobile || reducedMotion) {
         slides.forEach((slide) => {
             slide.addEventListener('click', (e) => {
@@ -63,12 +65,14 @@ ready(async () => {
         return;
     }
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const stage = initStage(canvas, { palette: PALETTE, dpr });
 
     // Lenis smooth scroll — cinematic momentum, cheap UX upgrade
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let lenis = null;
+    let lenisRafId = null;
+    let destroyed = false;
     if (window.Lenis && !reduced) {
         lenis = new window.Lenis({
             duration: 1.1,
@@ -77,10 +81,11 @@ ready(async () => {
             touchMultiplier: 1.4,
         });
         function lenisRaf(time) {
+            if (destroyed) return;
             lenis.raf(time);
-            requestAnimationFrame(lenisRaf);
+            lenisRafId = requestAnimationFrame(lenisRaf);
         }
-        requestAnimationFrame(lenisRaf);
+        lenisRafId = requestAnimationFrame(lenisRaf);
     }
 
     let inView = false;
@@ -88,6 +93,7 @@ ready(async () => {
     let rafId = null;
 
     function loop(t) {
+        if (destroyed) return;
         stage.tick(t);
         if ((inView || modalOpen) && document.visibilityState === 'visible') {
             rafId = requestAnimationFrame(loop);
@@ -96,10 +102,12 @@ ready(async () => {
         }
     }
 
-    window.addEventListener('resize', () => stage.resize());
-    document.addEventListener('visibilitychange', () => {
+    const onResize = () => stage.resize();
+    const onVisibilityChange = () => {
         if (!document.hidden && inView && rafId === null) loop(performance.now());
-    });
+    };
+    window.addEventListener('resize', onResize);
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     // Active slide = the one whose vertical center is closest to viewport center.
     // Before first slide / after last slide: overview mode (HOME_TARGET, all signatures visible).
@@ -154,6 +162,7 @@ ready(async () => {
         if (scrollTicking) return;
         scrollTicking = true;
         requestAnimationFrame(() => {
+            if (destroyed) return;
             updateActiveFromScroll();
             scrollTicking = false;
         });
@@ -179,20 +188,24 @@ ready(async () => {
         }, 720);
     }
 
+    const slideListeners = [];
     slides.forEach((slide) => {
-        slide.addEventListener('click', (e) => {
+        const onClick = (e) => {
             if (e.target.closest('a, button')) return;
             onCardActivate(slide);
-        });
-        slide.addEventListener('keydown', (e) => {
+        };
+        const onKeydown = (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 onCardActivate(slide);
             }
-        });
+        };
+        slide.addEventListener('click', onClick);
+        slide.addEventListener('keydown', onKeydown);
+        slideListeners.push([slide, onClick, onKeydown]);
     });
 
-    window.addEventListener('committee-modal:opened', (e) => {
+    const onModalOpened = (e) => {
         const sig = e.detail?.sig;
         if (sig) stage.zoomTo(sig);
         stage.isolate(true);
@@ -201,13 +214,38 @@ ready(async () => {
         if (rafId === null) loop(performance.now());
         // Stop Lenis so modal content can scroll natively
         lenis?.stop();
-    });
+    };
 
-    window.addEventListener('committee-modal:closed', () => {
+    const onModalClosed = () => {
         stage.isolate(false);
         stage.zoomOut();
         modalOpen = false;
         if (!inView) document.body.classList.remove('committees-visible');
         lenis?.start();
-    });
+    };
+    window.addEventListener('committee-modal:opened', onModalOpened);
+    window.addEventListener('committee-modal:closed', onModalClosed);
+
+    function teardown() {
+        if (destroyed) return;
+        destroyed = true;
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        if (lenisRafId !== null) cancelAnimationFrame(lenisRafId);
+        lenis?.destroy?.();
+        stage.destroy();
+        window.removeEventListener('resize', onResize);
+        window.removeEventListener('scroll', onScrollOrResize);
+        window.removeEventListener('resize', onScrollOrResize);
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+        window.removeEventListener('committee-modal:opened', onModalOpened);
+        window.removeEventListener('committee-modal:closed', onModalClosed);
+        slideListeners.forEach(([slide, onClick, onKeydown]) => {
+            slide.removeEventListener('click', onClick);
+            slide.removeEventListener('keydown', onKeydown);
+        });
+    }
+
+    window.addEventListener('pagehide', teardown, { once: true });
+    mobileQuery.addEventListener?.('change', teardown, { once: true });
+    motionQuery.addEventListener?.('change', teardown, { once: true });
 });

@@ -48,8 +48,13 @@ export function initStage(canvas, options) {
     // center). When sig becomes active, splitProgress tweens 0→1 and the
     // halves fly out to anchor.x / anchor.x + 2*OFFSET — card-framing split.
     const handles = {};
-    const splitProgress = {};
-    signatureOrder.forEach((sig) => {
+    const splitProgress = Object.fromEntries(signatureOrder.map((sig) => [sig, { v: 0 }]));
+    let destroyed = false;
+    let contextLost = false;
+    let idleHandle = null;
+
+    function createSignature(sig) {
+        if (handles[sig] || destroyed) return;
         const anchor = anchors[sig];
         handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor });
         rootGroup.add(handles[sig].group);
@@ -68,11 +73,28 @@ export function initStage(canvas, options) {
         handles[sig].mirror = mirror;
         rootGroup.add(mirror);
 
-        splitProgress[sig] = { v: 0 };
         applySplit(sig);
-    });
+    }
+
+    // Keep the first frame cheap. The active signature is created on demand;
+    // the remaining overview signatures are materialized one idle slice at a time.
+    createSignature(signatureOrder[0]);
+    const pendingSignatures = signatureOrder.slice(1);
+    const scheduleIdle = (fn) => {
+        if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+            return window.requestIdleCallback(fn, { timeout: 800 });
+        }
+        return window.setTimeout(fn, 0);
+    };
+    const materializeNext = () => {
+        if (destroyed || pendingSignatures.length === 0) return;
+        createSignature(pendingSignatures.shift());
+        idleHandle = scheduleIdle(materializeNext);
+    };
+    idleHandle = scheduleIdle(materializeNext);
 
     function applySplit(sig) {
+        if (!handles[sig]) return;
         const anchor = anchors[sig];
         const p = splitProgress[sig].v;
         // p=0: both at anchor → overlap, renders as single shape
@@ -200,11 +222,13 @@ export function initStage(canvas, options) {
     }
 
     function tick(timeMs) {
+        if (destroyed || contextLost) return;
         const elapsed = timeMs / 1000;
         const dt = Math.min(0.05, (timeMs - prevTime) / 1000);
         prevTime = timeMs;
 
         signatureOrder.forEach((sig) => {
+            if (!handles[sig]) return;
             let target;
             if (isolated) {
                 target = (zoomedSig === sig || activeSig === sig) ? 1 : 0;
@@ -273,6 +297,7 @@ export function initStage(canvas, options) {
 
     function setActive(sig) {
         if (sig === activeSig) return;
+        if (sig) createSignature(sig);
         const prev = activeSig;
         activeSig = sig;
         if (!zoomedSig) applyTarget();
@@ -292,6 +317,7 @@ export function initStage(canvas, options) {
     }
 
     function zoomTo(sig) {
+        createSignature(sig);
         zoomedSig = sig;
         applyTarget();
         // Halves stay SPLIT in modal — user sees symmetric halves on both
@@ -307,12 +333,42 @@ export function initStage(canvas, options) {
         isolated = !!on;
     }
 
+    function onContextLost(event) {
+        event.preventDefault();
+        contextLost = true;
+    }
+
+    function onContextRestored() {
+        if (destroyed) return;
+        contextLost = false;
+        renderer.setPixelRatio(dpr);
+        resize();
+    }
+
+    canvas.addEventListener('webglcontextlost', onContextLost, false);
+    canvas.addEventListener('webglcontextrestored', onContextRestored, false);
+
     function destroy() {
+        if (destroyed) return;
+        destroyed = true;
+        if (idleHandle !== null) {
+            if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) window.cancelIdleCallback(idleHandle);
+            else clearTimeout(idleHandle);
+            idleHandle = null;
+        }
+        canvas.removeEventListener('webglcontextlost', onContextLost);
+        canvas.removeEventListener('webglcontextrestored', onContextRestored);
+        if (gsap) {
+            gsap.killTweensOf(camPos);
+            gsap.killTweensOf(camLook);
+        }
         signatureOrder.forEach((sig) => {
+            if (!handles[sig]) return;
             disposeGroup(handles[sig].group);
             if (handles[sig].mirror) disposeGroup(handles[sig].mirror);
         });
         renderer.dispose();
+        renderer.forceContextLoss?.();
         composer.dispose?.();
     }
 
