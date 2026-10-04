@@ -3,11 +3,9 @@ import * as THREE from 'three';
 const canvas = document.getElementById('bg-canvas');
 if (!canvas) throw new Error('bg-canvas not found');
 
-// Site is animation-first (orbital ambient shapes, mode transitions, hero countdown).
-// Honoring prefers-reduced-motion would freeze the entire scene to a still image,
-// which defeats the design intent. Subtle motion is preserved for all users.
-const prefersReducedMotion = false;
-const isMobile = window.innerWidth < 768;
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+let prefersReducedMotion = motionPreference.matches;
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
 const PALETTE = {
     dark: { particle: 0x9FB6D5, accent: 0x819FCD, lines: 0x5381BE, fog: 0x2C56A5 },
@@ -43,7 +41,7 @@ const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerH
 camera.position.set(0, 0, 60);
 
 const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.5));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x000000, 0);
 
@@ -601,15 +599,42 @@ window.addEventListener('resize', () => {
 // ===== ANIMATE =====
 const clock = new THREE.Clock();
 let running = true;
+let animationFrameId = 0;
+function scheduleAnimation() {
+    if (running && !prefersReducedMotion && animationFrameId === 0) {
+        animationFrameId = requestAnimationFrame(animate);
+    }
+}
+
 document.addEventListener('visibilitychange', () => {
     running = !document.hidden;
-    if (running) clock.start();
+    if (!running && animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+    } else if (running) {
+        clock.start();
+        if (prefersReducedMotion) renderer.render(scene, camera);
+        else scheduleAnimation();
+    }
+});
+
+motionPreference.addEventListener('change', (event) => {
+    prefersReducedMotion = event.matches;
+    if (prefersReducedMotion && animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+        animate();
+    } else if (!prefersReducedMotion) {
+        clock.start();
+        scheduleAnimation();
+    }
 });
 
 function lerp(a, b, t) { return a + (b - a) * t; }
 
 function animate() {
-    if (!running) { requestAnimationFrame(animate); return; }
+    animationFrameId = 0;
+    if (!running) return;
     const dt = Math.min(clock.getDelta(), 0.05);
     const t = clock.elapsedTime;
 
@@ -756,8 +781,11 @@ function animate() {
     }
 
     renderer.render(scene, camera);
-    requestAnimationFrame(animate);
+    scheduleAnimation();
 }
+
+if (prefersReducedMotion) renderer.render(scene, camera);
+else scheduleAnimation();
 
 function animateMode(group, name, t) {
     if (!group.visible) return;

@@ -2695,19 +2695,37 @@ body.committees-visible #committees-stage {
 }
 
 /* ==================== PRELOADER ==================== */
-body.is-loading {
-    overflow: hidden;
-}
 #preloader {
     position: fixed;
     inset: 0;
     z-index: 9999;
     background: #0a1628;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     transition: opacity 0.6s ease, visibility 0.6s ease;
 }
+
+.skip-link {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 10001;
+    padding: 12px 16px;
+    color: var(--white);
+    background: var(--navy-dark);
+    border-radius: 8px;
+    transform: translateY(-160%);
+}
+
+.skip-link:focus-visible {
+    transform: translateY(0);
+    outline: 3px solid var(--accent-light);
+    outline-offset: 3px;
+}
+
+main [id] { scroll-margin-top: calc(var(--nav-height) + 16px); }
+body.is-loading #preloader { display: flex; }
 #preloader.is-hidden {
     opacity: 0;
     visibility: hidden;
@@ -2889,4 +2907,72 @@ body.lightbox-open {
 }
 .committees-cta.is-closed .committees-cta__kicker {
     opacity: 0.8;
+}
+
+/* Measured contrast and responsive media fixes */
+.section-theme .section-badge,
+.section-theme .theme-desc { color: var(--white); }
+.section-about .section-badge,
+.section-faq .section-badge,
+.section-sponsors .section-badge { color: var(--text-on-light); }
+.section-team .section-badge,
+.section-eventinfo .section-badge,
+.section-past .section-badge,
+.section-contact .section-badge { color: var(--white); }
+.section-about .section-desc { color: var(--text-on-light); }
+.section-past .section-title,
+.section-past .past-year,
+.section-contact .section-title { color: var(--white); }
+.committee-slide__page { color: var(--accent-light); }
+.program__tab-date,
+.program__tab-day,
+.timeline__meta { color: var(--white); }
+.footer-desc,
+.footer-links a,
+.footer-contact li { color: rgba(255, 255, 255, 0.88); }
+.footer-bottom p { color: rgba(255, 255, 255, 0.82); }
+.footer-logo .logo-text { color: var(--accent-light); }
+.footer-heading {
+    color: var(--white);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 20px;
+}
+.contact-item__label {
+    color: var(--navy-primary);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.committee-slide__open {
+    justify-self: start;
+    min-height: var(--touch-min);
+    padding: 10px 16px;
+    color: var(--white);
+    background: var(--navy-medium);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition), transform var(--transition);
+}
+.committee-slide__open:hover { background: var(--accent-hover); }
+.committee-slide__open:active { transform: translateY(1px); }
+.committee-slide__open:focus-visible { outline: 3px solid var(--accent-light); outline-offset: 3px; }
+.responsive-picture { display: block; width: 100%; height: 100%; }
+.responsive-picture--program { height: auto; }
+.responsive-picture--program .eventinfo-img { height: auto; }
+.subteam-cover > .responsive-picture { position: absolute; inset: 0; }
+.subteam-cover .responsive-picture img { width: 100%; height: 100%; }
+.past-photo > .responsive-picture { position: absolute; inset: 0; }
+.past-photo { position: relative; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

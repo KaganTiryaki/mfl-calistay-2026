@@ -1,5 +1,3 @@
-import { initStage } from './scene/stage.js';
-
 const PALETTE = {
     void: '#05070E',
     ink: '#0E1A33',
@@ -18,7 +16,7 @@ function ready(fn) {
     }
 }
 
-ready(() => {
+ready(async () => {
     const section = document.getElementById('komiteler');
     const canvas = document.getElementById('committees-stage');
     const slides = Array.from(document.querySelectorAll('.committee-slide'));
@@ -27,10 +25,9 @@ ready(() => {
     // Mobile path: skip Three.js stage + GTA camera entirely. Render slides as
     // a vertical card list and let tap → modal (handled in main.js).
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    if (isMobile) {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isMobile || reducedMotion) {
         slides.forEach((slide) => {
-            slide.setAttribute('role', 'button');
-            slide.setAttribute('tabindex', '0');
             slide.addEventListener('click', (e) => {
                 if (e.target.closest('a, button')) return;
                 const num = slide.querySelector('.committee__num')?.textContent?.trim();
@@ -38,13 +35,31 @@ ready(() => {
                     window.openCommitteeModal(num, slide);
                 }
             });
-            slide.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    slide.click();
-                }
-            });
         });
+        return;
+    }
+
+    if (location.hash !== '#komiteler' && 'IntersectionObserver' in window) {
+        await new Promise((resolve) => {
+            const observer = new IntersectionObserver((entries) => {
+                if (!entries.some((entry) => entry.isIntersecting)) return;
+                observer.disconnect();
+                resolve();
+            }, { rootMargin: '200px 0px' });
+            observer.observe(section);
+        });
+    }
+
+    let initStage;
+    try {
+        ({ initStage } = await import('./scene/stage.js'));
+    } catch (error) {
+        console.error('Komite görsel sahnesi yüklenemedi:', error);
+        slides.forEach((slide) => slide.addEventListener('click', (e) => {
+            if (e.target.closest('a, button')) return;
+            const num = slide.querySelector('.committee__num')?.textContent?.trim();
+            if (num) window.openCommitteeModal?.(num, slide);
+        }));
         return;
     }
 
@@ -165,8 +180,6 @@ ready(() => {
     }
 
     slides.forEach((slide) => {
-        slide.setAttribute('role', 'button');
-        slide.setAttribute('tabindex', '0');
         slide.addEventListener('click', (e) => {
             if (e.target.closest('a, button')) return;
             onCardActivate(slide);
