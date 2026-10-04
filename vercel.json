@@ -4,6 +4,12 @@
     { "source": "/ekle", "destination": "/ekle.html" }
   ],
   "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.maltepefencalistay.org" }],
+      "destination": "https://maltepefencalistay.org/:path*",
+      "permanent": true
+    },
     { "source": "/panel", "destination": "/adminpanel", "permanent": true },
     { "source": "/panel/:path*", "destination": "/adminpanel/:path*", "permanent": true },
     { "source": "/admin", "destination": "/adminpanel", "permanent": true },
